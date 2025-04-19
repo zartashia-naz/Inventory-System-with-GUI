@@ -2,7 +2,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 from employee import Employee
 from supplier import Supplier
-
+from category import Category
 class IMS:
     def __init__(self, root):
         self.root = root
@@ -44,7 +44,7 @@ class IMS:
                              font=("Times New Roman", 20, "bold"))
         btn_Supplier.pack(side=TOP, fill=X)
         
-        btn_Category = Button(left_menu, text="Category", bd=4, padx=5, bg="#009688", cursor="hand2", 
+        btn_Category = Button(left_menu, text="Category",command=self.category, bd=4, padx=5, bg="#009688", cursor="hand2", 
                              font=("Times New Roman", 20, "bold"))
         btn_Category.pack(side=TOP, fill=X)
 
@@ -177,6 +177,10 @@ class IMS:
     def supplier(self):
          self.sup_window=Toplevel(self.root)
          self.sup_obj=Supplier(self.sup_window)
+
+    def category(self):
+        self.cat_window=Toplevel(self.root)
+        self.cat_obj=Category(self.cat_window)
 
 if __name__=="__main__":
         root = Tk()
