@@ -1,5 +1,7 @@
 from tkinter import *
 from PIL import Image, ImageTk
+from employee import Employee
+from supplier import Supplier
 
 class IMS:
     def __init__(self, root):
@@ -34,11 +36,11 @@ class IMS:
         lbl_menu = Label(left_menu, text="Menu", font=("times new roman", 20), bg="#009688")
         lbl_menu.pack(side=TOP, fill=X)
         
-        btn_emp = Button(left_menu, text="Employee", bd=4, padx=5, bg="#009688", cursor="hand2", 
+        btn_emp = Button(left_menu, text="Employee",command=self.employee, bd=4, padx=5, bg="#009688", cursor="hand2", 
                         font=("Times New Roman", 20, "bold"))
         btn_emp.pack(side=TOP, fill=X)
         
-        btn_Supplier = Button(left_menu, text="Supplier", bd=4, padx=5, bg="#009688", cursor="hand2", 
+        btn_Supplier = Button(left_menu, text="Supplier", command=self.supplier, bd=4, padx=5, bg="#009688", cursor="hand2", 
                              font=("Times New Roman", 20, "bold"))
         btn_Supplier.pack(side=TOP, fill=X)
         
@@ -163,12 +165,20 @@ class IMS:
         self.total_sales_lable.pack()
 
 
-
-
         lb1_footer = Label(self.root, text="Inventory Management System\nFor Any queries contact",
                                 font=("Arial", 25), bg="light gray", fg="white", justify=CENTER)
         lb1_footer.pack(side=BOTTOM, fill=X)
 
-root = Tk()
-obj = IMS(root)
-root.mainloop()
+
+    def employee(self):
+         self.emp_window=Toplevel(self.root)
+         self.emp_obj=Employee(self.emp_window)
+
+    def supplier(self):
+         self.sup_window=Toplevel(self.root)
+         self.sup_obj=Supplier(self.sup_window)
+
+if __name__=="__main__":
+        root = Tk()
+        obj = IMS(root)
+        root.mainloop()
