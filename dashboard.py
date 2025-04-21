@@ -3,11 +3,14 @@ from PIL import Image, ImageTk
 from employee import Employee
 from supplier import Supplier
 from category import Category
+from products import Products
 class IMS:
     def __init__(self, root):
         self.root = root
         self.root.geometry("1270x800+0+0")
         self.root.title("Inventory Management System")
+
+       
 
         # Store all images as instance variables to prevent garbage collection
         self.logo = PhotoImage(file="/Users/macbookpro/Desktop/python projects/Inventory-System-with-GUI/img logo2.png")
@@ -48,7 +51,7 @@ class IMS:
                              font=("Times New Roman", 20, "bold"))
         btn_Category.pack(side=TOP, fill=X)
 
-        btn_products= Button(left_menu, text="Products", bd=4, padx=5, bg="#009688", cursor="hand2", 
+        btn_products= Button(left_menu, text="Products",command=self.products, bd=4, padx=5, bg="#009688", cursor="hand2", 
                              font=("Times New Roman", 20, "bold"))
         btn_products.pack(side=TOP, fill=X)
         
@@ -181,6 +184,11 @@ class IMS:
     def category(self):
         self.cat_window=Toplevel(self.root)
         self.cat_obj=Category(self.cat_window)
+
+    def products(self):
+        self.products_window=Toplevel(self.root)
+        self.products_obj=Products(self.products_window)
+
 
 if __name__=="__main__":
         root = Tk()

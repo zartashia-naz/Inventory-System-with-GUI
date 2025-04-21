@@ -4,6 +4,7 @@ from tkinter import ttk
 from tkcalendar import DateEntry
 from tkvideo import tkvideo
 import os
+
 class Category:
     def __init__(self, root):
         self.root = root

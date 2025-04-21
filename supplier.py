@@ -42,7 +42,7 @@ class Supplier:
         self.btn_frame=Frame(self.left_frame)
         self.btn_frame.grid(row=4,columnspan=2, pady=15)
 
-        add_button=Button(self.btn_frame,text="Add",font=("Times New Roman", 20),bg="blue",fg="white",activeforeground="white",cursor = 'hand2',width=8)
+        add_button=Button(self.btn_frame,text="Add",font=("Times New Roman", 20),bg="red",fg="white",activeforeground="red",cursor = 'hand2',width=8)
         add_button.grid(row=4, column=1,padx=10)
 
 
