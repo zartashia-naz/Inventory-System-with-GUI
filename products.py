@@ -13,7 +13,7 @@ class Products:
         pro_left_frame=Frame(self.root, bd=2, relief=RIDGE)
         pro_left_frame.place(x=20,y=50)
         
-        self.pro_header_label=Label(pro_left_frame, text="Manage Employee Details",bg="#9370DB", fg="white", font=("Times New Roman", 25,"bold"), justify=CENTER)
+        self.pro_header_label=Label(pro_left_frame, text="Manage Product Details",bg="#9370DB", fg="white", font=("Times New Roman", 25,"bold"), justify=CENTER)
         self.pro_header_label.grid(row=0,columnspan=2)
 
         cat_lbl=Label(pro_left_frame, text="Category", font=("Times New Roman", 15))
