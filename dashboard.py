@@ -5,21 +5,31 @@ from supplier import Supplier
 from category import Category
 from products import Products
 from sales import Sales
+import os
+from login import Login
+from database import MongoDBConnection
+
 class IMS:
     def __init__(self, root):
         self.root = root
         self.root.geometry("1270x800+0+0")
         self.root.title("Inventory Management System")
-
-       
+        
+        # Initialize database connection
+        self.db = MongoDBConnection()
 
         # Store all images as instance variables to prevent garbage collection
-        self.logo = PhotoImage(file="/Users/macbookpro/Desktop/python projects/Inventory-System-with-GUI/img logo2.png")
-        lableTitle = Label(self.root, text="INVENTORY MANAGEMENT SYSTEM", image=self.logo, compound=LEFT, padx=10,
+        self.logo_img = Image.open("/Users/macbookpro/Desktop/python projects/Inventory-System-with-GUI/img logo2.png")
+        self.logo_img = self.logo_img.resize((50, 50), Image.Resampling.LANCZOS)
+        self.logo_img_tk = ImageTk.PhotoImage(self.logo_img)
+    
+
+        # self.logo = PhotoImage(file="/Users/macbookpro/Desktop/python projects/Inventory-System-with-GUI/img logo2.png")
+        lableTitle = Label(self.root, text="INVENTORY MANAGEMENT SYSTEM", image=self.logo_img_tk, compound=LEFT, padx=10,
                          font=("Arial", 40, "bold"), bg="purple", fg="white", anchor="w")
         lableTitle.place(x=0, y=0, relwidth=1, height=70)
 
-        logout_btn = Button(self.root, text="LOGOUT", font=("Arial", 15), bg="light yellow", fg="black", cursor="hand2")
+        logout_btn = Button(self.root, text="LOGOUT", font=("Arial", 15),command=self.logout, bg="light yellow", fg="black", cursor="hand2")
         logout_btn.place(x=1150, y=20, height=25)  # Adjusted x position
 
         lbl_header = Label(self.root, text="Welcome to Inventory Management System",
@@ -60,7 +70,7 @@ class IMS:
                           font=("Times New Roman", 20, "bold"))
         btn_Sales.pack(side=TOP, fill=X)
         
-        btn_Exit = Button(left_menu, text="Exit", bd=4, padx=5, bg="#009688", cursor="hand2", 
+        btn_Exit = Button(left_menu, text="Exit", command=self.root.destroy, bd=4, padx=5, bg="#009688", cursor="hand2", 
                          font=("Times New Roman", 20, "bold"))
         btn_Exit.pack(side=TOP, fill=X)
 
@@ -82,9 +92,9 @@ class IMS:
                                   font=('Times New Roman', 15, "bold"))
             total_emp_label.pack()
             
-            total_emp_count_label = Label(emp_frame, text='0', bg='#2C3E50', fg='white',
+            self.total_emp_count_label = Label(emp_frame, text='0', bg='#2C3E50', fg='white',
                                         font=("Times New Roman", 30, "bold"))
-            total_emp_count_label.pack()
+            self.total_emp_count_label.pack()
         except Exception as e:
             print(f"Error loading employee image: {e}")
             Label(emp_frame, text="Image not found", bg='#2C3E50', fg='white').pack()
@@ -105,9 +115,9 @@ class IMS:
                                   font=('Times New Roman', 15, "bold"))
         supplier_label.pack()
             
-        supplier_count_label = Label(supplier_frame, text='0', bg='#2C3E50', fg='white',
+        self.supplier_count_label = Label(supplier_frame, text='0', bg='#2C3E50', fg='white',
                                         font=("Times New Roman", 30, "bold"))
-        supplier_count_label.pack()
+        self.supplier_count_label.pack()
 
 
 
@@ -126,9 +136,9 @@ class IMS:
                                   font=('Times New Roman', 15, "bold"))
         cat_label.pack()
             
-        cat_count_label = Label(cat_frame, text='0', bg='#2C3E50', fg='white',
+        self.cat_count_label = Label(cat_frame, text='0', bg='#2C3E50', fg='white',
                                         font=("Times New Roman", 30, "bold"))
-        cat_count_label.pack()
+        self.cat_count_label.pack()
 
 
         product_frame=Frame(root, bg="#2C3E50", bd=3, relief=RIDGE)
@@ -172,27 +182,89 @@ class IMS:
         lb1_footer = Label(self.root, text="Inventory Management System\nFor Any queries contact",
                                 font=("Arial", 25), bg="light gray", fg="white", justify=CENTER)
         lb1_footer.pack(side=BOTTOM, fill=X)
+        
+        # Update counts initially
+        self.update_counts()
+        
+        # Set up automatic refresh (every 5 seconds)
+        self.root.after(5000, self.refresh_counts)
 
+
+    def update_counts(self):
+        """Update all counts from the database"""
+        try:
+            # Update employee count
+            emp_count = self.db.employees.count_documents({})
+            self.total_emp_count_label.config(text=str(emp_count))
+            
+            # Update supplier count
+            supplier_count = self.db.suppliers.count_documents({})
+            self.supplier_count_label.config(text=str(supplier_count))
+            
+            # Update category count
+            category_count = self.db.categories.count_documents({})
+            self.cat_count_label.config(text=str(category_count))
+            
+            # Update product count
+            product_count = self.db.products.count_documents({})
+            self.product_count_lable.config(text=str(product_count))
+            
+            # Update sales count - either count or sum based on requirement
+            sales_count = self.db.sales.count_documents({})
+            self.total_sales_lable.config(text=str(sales_count))
+            
+            # Alternatively, for total sales amount:
+            # try:
+            #     pipeline = [{"$group": {"_id": None, "total": {"$sum": "$amount"}}}]
+            #     result = list(self.db.sales.aggregate(pipeline))
+            #     total_sales = result[0]['total'] if result else 0
+            #     self.total_sales_lable.config(text=f"{total_sales:.2f}")
+            # except Exception as e:
+            #     print(f"Error calculating total sales: {e}")
+            #     self.total_sales_lable.config(text="0")
+            
+        except Exception as e:
+            print(f"Error updating counts: {e}")
+    
+    def refresh_counts(self):
+        """Refresh counts periodically"""
+        self.update_counts()
+        self.root.after(5000, self.refresh_counts)  # Refresh every 5 seconds
 
     def employee(self):
-         self.emp_window=Toplevel(self.root)
-         self.emp_obj=Employee(self.emp_window)
+        self.emp_window=Toplevel(self.root)
+        self.emp_obj=Employee(self.emp_window)
+        self.emp_window.protocol("WM_DELETE_WINDOW", lambda: self.close_and_refresh(self.emp_window))
 
     def supplier(self):
-         self.sup_window=Toplevel(self.root)
-         self.sup_obj=Supplier(self.sup_window)
+        self.sup_window=Toplevel(self.root)
+        self.sup_obj=Supplier(self.sup_window)
+        self.sup_window.protocol("WM_DELETE_WINDOW", lambda: self.close_and_refresh(self.sup_window))
 
     def category(self):
         self.cat_window=Toplevel(self.root)
         self.cat_obj=Category(self.cat_window)
+        self.cat_window.protocol("WM_DELETE_WINDOW", lambda: self.close_and_refresh(self.cat_window))
 
     def products(self):
         self.products_window=Toplevel(self.root)
         self.products_obj=Products(self.products_window)
+        self.products_window.protocol("WM_DELETE_WINDOW", lambda: self.close_and_refresh(self.products_window))
 
     def sales(self):
-         self.sales_window=Toplevel(self.root)
-         self.sales_obj=Sales(self.sales_window)
+        self.sales_window=Toplevel(self.root)
+        self.sales_obj=Sales(self.sales_window)
+        self.sales_window.protocol("WM_DELETE_WINDOW", lambda: self.close_and_refresh(self.sales_window))
+    
+    def close_and_refresh(self, window):
+        """Close window and refresh counts"""
+        window.destroy()
+        self.update_counts()
+
+    def logout(self):
+        self.root.destroy()
+        import subprocess
+        subprocess.Popen(["python3", "login.py"])
 
 
 if __name__=="__main__":

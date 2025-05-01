@@ -70,7 +70,7 @@ class Sales:
     def show(self):
          del self.bill_list[:]
          self.sales_listbox.delete(0,END)
-         for i in os.listdir("bill"):
+         for i in os.listdir("/Users/macbookpro/Desktop/python projects/Inventory-System-with-GUI/bills"):
               if i.split(".")[-1]=="txt":
                    self.sales_listbox.insert(END,i)
                    self.bill_list.append(i.split(".")[0])
@@ -84,7 +84,7 @@ class Sales:
             file_name = self.sales_listbox.get(index_)  # Get first selected item
             self.bill_area.delete('1.0', END)
             
-            with open(f'bill/{file_name}', 'r') as fp:  # Using context manager
+            with open(f'/Users/macbookpro/Desktop/python projects/Inventory-System-with-GUI/bills/{file_name}', 'r') as fp:  # Using context manager
                 for line in fp:
                     self.bill_area.insert(END, line)
 
@@ -104,7 +104,7 @@ class Sales:
     
       if invoice_no in self.bill_list:
         try:
-            with open(f'bill/{invoice_no}.txt', 'r') as fp:
+            with open(f'/Users/macbookpro/Desktop/python projects/Inventory-System-with-GUI/bills/{invoice_no}.txt', 'r') as fp:
                 self.bill_area.delete('1.0', END)
                 self.bill_area.insert(END, fp.read())  # More efficient reading
         except FileNotFoundError:
