@@ -40,9 +40,6 @@ class Employee:
         
         # Track selected employee for update/delete
         self.selected_emp_id = None
-
-        # Set next employee ID automatically
-        self.generate_employee_id()
         
         self.emp_header_label=Label(self.root, text="Manage Employee Details", bg="#9370DB", fg="white", font=("Times New Roman", 30,"bold"), justify=CENTER)
         self.emp_header_label.place(x=0,y=0,relwidth=1)
@@ -121,8 +118,7 @@ class Employee:
 
         employee_details_label=Label(employee_details_frame, text= "EmployeeID", font=("Times New Roman", 15))
         employee_details_label.grid(row=0, column=0,padx=10,pady=10)
-        # Make employee ID entry readonly since it's auto-generated
-        employee_details_entry=Entry(employee_details_frame,textvariable=self.var_emp_id,bg="light grey",state="readonly")
+        employee_details_entry=Entry(employee_details_frame,textvariable=self.var_emp_id,bg="light yellow")
         employee_details_entry.grid(row=0,column=1,padx=10,pady=10)
 
 
@@ -278,47 +274,6 @@ class Employee:
             print(f"Error in get_data: {str(e)}")
             messagebox.showerror("Error", f"Error loading data: {str(e)}")
 
-    def generate_employee_id(self):
-        """Generate a new auto-incremented employee ID"""
-        try:
-            # Get the highest employee ID from the database
-            highest_id = 0
-            
-            # Find the highest numeric employee ID
-            employees = self.db.employees.find({}, {"employee_id": 1})
-            for emp in employees:
-                emp_id = emp.get('employee_id', '0')
-                # Convert to integer if possible
-                try:
-                    if isinstance(emp_id, str) and emp_id.isdigit():
-                        emp_id = int(emp_id)
-                    elif isinstance(emp_id, int):
-                        pass
-                    else:
-                        continue
-                        
-                    if emp_id > highest_id:
-                        highest_id = emp_id
-                except:
-                    continue
-            
-            # Generate next ID (highest + 1)
-            next_id = highest_id + 1
-            
-            # Format with leading zeros (EMP001, EMP002, etc.)
-            next_id_str = f"{next_id:03d}"
-            
-            # Set the employee ID
-            self.var_emp_id.set(next_id_str)
-            print(f"Generated new employee ID: {next_id_str}")
-            
-        except Exception as e:
-            print(f"Error generating employee ID: {str(e)}")
-            # Fallback to a timestamp-based ID if database query fails
-            import time
-            fallback_id = f"{int(time.time())}"[-4:]
-            self.var_emp_id.set(fallback_id)
-
     def add_employee(self):
         """Add a new employee to the database"""
         try:
@@ -326,7 +281,9 @@ class Employee:
                 messagebox.showerror("Error", "Employee Name is required")
                 return
                 
-            # Employee ID is now auto-generated, no need to check if it's empty
+            if not self.var_emp_id.get():
+                messagebox.showerror("Error", "Employee ID is required")
+                return
                 
             # Convert date objects to datetime objects for MongoDB storage
             dob_date = self.cal_dob.get_date()
@@ -339,7 +296,7 @@ class Employee:
             # Get address from Text widget
             address = self.emp_detail_address_Txt.get(1.0, END).strip()
             
-            # Store employee_id consistently as string
+            # Store employee_id consistently as string to avoid type mismatches
             emp_id = str(self.var_emp_id.get()).strip()
                 
             employee_data = {
@@ -367,8 +324,6 @@ class Employee:
                 
             if existing:
                 messagebox.showerror("Error", f"Employee ID {emp_id} already exists!")
-                # Generate a new ID since this one is taken
-                self.generate_employee_id()
                 return
             
             # Insert into MongoDB
@@ -562,11 +517,12 @@ class Employee:
             for item in self.employee_treeview.get_children():
                 self.employee_treeview.delete(item)
             
-            # Create query for case-insensitive search
+        
             query = {field_name: {"$regex": search_text, "$options": "i"}}
             
             # Fetch matching employees from MongoDB
             employees = self.db.employees.find(query).sort("name", 1)
+
             count = 0
             
             for employee in employees:
@@ -637,8 +593,7 @@ class Employee:
 
     def clear_fields(self):
         """Clear all form fields"""
-        # Don't clear employee ID, regenerate it
-        self.generate_employee_id()
+        self.var_emp_id.set("")
         self.var_name.set("")
         self.var_email.set("")
         self.var_gender.set("Select")
