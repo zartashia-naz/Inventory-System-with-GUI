@@ -53,20 +53,20 @@ class Supplier:
         self.btn_frame=Frame(self.left_frame)
         self.btn_frame.grid(row=4,columnspan=2, pady=15)
 
-        add_button=Button(self.btn_frame,text="Add", command=self.add_supplier, font=("Times New Roman", 20),bg="red",fg="white",activeforeground="red",cursor = 'hand2',width=8)
+        add_button=Button(self.btn_frame,text="Add", command=self.add_supplier, font=("Times New Roman", 20),bg="red",fg="black",activeforeground="red",cursor = 'hand2',width=8)
         add_button.grid(row=4, column=1,padx=10)
 
 
-        update_button=Button(self.btn_frame,text="Update", command=self.update_supplier, font=("Times New Roman", 20),bg="blue",fg="white",activeforeground="white",cursor = 'hand2',width=8)
+        update_button=Button(self.btn_frame,text="Update", command=self.update_supplier, font=("Times New Roman", 20),bg="blue",fg="black",activeforeground="white",cursor = 'hand2',width=8)
         update_button.grid(row=4, column=2,padx=10)
 
 
-        delete_button=Button(self.btn_frame,text="Delete", command=self.delete_supplier, font=("Times New Roman", 20),bg="blue",fg="white",activeforeground="white",cursor = 'hand2',width=8)
+        delete_button=Button(self.btn_frame,text="Delete", command=self.delete_supplier, font=("Times New Roman", 20),bg="blue",fg="black",activeforeground="white",cursor = 'hand2',width=8)
         delete_button.grid(row=4, column=3,padx=10)
 
 
      
-        clear_button=Button(self.btn_frame,text="Clear", command=self.clear_fields, font=("Times New Roman",20),bg="blue",fg="white",activeforeground="white",cursor = 'hand2',width=8)
+        clear_button=Button(self.btn_frame,text="Clear", command=self.clear_fields, font=("Times New Roman",20),bg="blue",fg="black",activeforeground="white",cursor = 'hand2',width=8)
         clear_button.grid(row=4, column=4,padx=10)
 
 

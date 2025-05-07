@@ -6,4 +6,4 @@ venv/
 .env
 .DS_Store
 .qodo
-.bills
+bills/*.txt

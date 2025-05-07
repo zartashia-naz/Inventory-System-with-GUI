@@ -46,7 +46,7 @@ class Login:
         password_entry.place(x=20, y=210,width=350)
         
 
-        login_btn=Button(right_frame, text="LOGIN", command=self.login, font=("Times new roman", 20),relief=FLAT,borderwidth=0, bg="#00B0F0",fg="white",activebackground='#00B0F0',activeforeground='white', cursor="hand2")
+        login_btn=Button(right_frame, text="LOGIN", command=self.login, font=("Times new roman", 20),relief=FLAT,borderwidth=0, bg="blue",fg="Black",activebackground='#00B0F0',activeforeground='white', cursor="hand2")
         login_btn.place(x=20,y=280, width=350 )
 
         hr_lbl=Label(right_frame, bg="lightgray", font=("Times new roman", 20))
@@ -55,7 +55,7 @@ class Login:
         or_lbl=Label(right_frame, text="OR", font=("Times new roman", 20), fg="light gray", bg="white")
         or_lbl.place(x=170, y=335)
 
-        forget_pass_btn=Button(right_frame,text="Forget Password?",command=self.forget_password_window,font=("Times new roman", 13),relief=FLAT,borderwidth=0,bg="white",activebackground="white",activeforeground='white', fg="blue",cursor="hand2")
+        forget_pass_btn=Button(right_frame,text="Forget Password?",command=self.forget_password_window,font=("Times new roman", 13),relief=FLAT,borderwidth=0,bg="white",activebackground="black",activeforeground='white', fg="blue",cursor="hand2")
         forget_pass_btn.place(x=120,y=370 )
 
         reg_frame=Frame(self.root, bd=2, relief=RIDGE, bg="white")
@@ -136,11 +136,11 @@ class Login:
         id_entry.place(x=20, y=90, width=350, height=30)
         
         # Submit button
-        submit_btn = Button(self.forget_win, text="Submit", command=self.check_employee_exists, font=("times new roman", 15, "bold"), bg="#00B0F0", fg="white", cursor="hand2")
+        submit_btn = Button(self.forget_win, text="Submit", command=self.check_employee_exists, font=("times new roman", 15, "bold"), bg="#00B0F0", fg="black", cursor="hand2")
         submit_btn.place(x=20, y=140, width=350, height=35)
         
         # Cancel button
-        cancel_btn = Button(self.forget_win, text="Cancel", command=self.forget_win.destroy, font=("times new roman", 15, "bold"), bg="gray", fg="white", cursor="hand2")
+        cancel_btn = Button(self.forget_win, text="Cancel", command=self.forget_win.destroy, font=("times new roman", 15, "bold"), bg="gray", fg="black", cursor="hand2")
         cancel_btn.place(x=20, y=190, width=350, height=35)
     
     def check_employee_exists(self):
@@ -222,11 +222,11 @@ class Login:
         confirm_pass_entry.place(x=20, y=220, width=350, height=30)
         
         # Reset button
-        reset_btn = Button(self.reset_win, text="Reset Password", command=lambda: self.update_password(employee), font=("times new roman", 15, "bold"), bg="#00B0F0", fg="white", cursor="hand2")
+        reset_btn = Button(self.reset_win, text="Reset Password", command=lambda: self.update_password(employee), font=("times new roman", 15, "bold"), bg="#00B0F0", fg="black", cursor="hand2")
         reset_btn.place(x=20, y=270, width=350, height=35)
         
         # Cancel button
-        cancel_btn = Button(self.reset_win, text="Cancel", command=self.reset_win.destroy, font=("times new roman", 15, "bold"), bg="gray", fg="white", cursor="hand2")
+        cancel_btn = Button(self.reset_win, text="Cancel", command=self.reset_win.destroy, font=("times new roman", 15, "bold"), bg="gray", fg="black", cursor="hand2")
         cancel_btn.place(x=20, y=320, width=350, height=35)
     
     def update_password(self, employee):
