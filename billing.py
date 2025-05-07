@@ -107,7 +107,7 @@ class BillingClass:
         # Show all button
         show_all_btn = Button(prod_search_frame, text="Show All", 
                              font=("times new roman", 13), 
-                             bg="#083531", fg="white", cursor="hand2",
+                             bg="#083531", fg="black", cursor="hand2",
                              command=self.show_all_products)
         show_all_btn.place(x=300, y=5, width=90, height=30)
         
@@ -126,7 +126,7 @@ class BillingClass:
         # Search button
         search_btn = Button(prod_search_frame, text="Search", 
                            font=("times new roman", 15), 
-                           bg="#2196f3", fg="white", cursor="hand2",
+                           bg="#2196f3", fg="black", cursor="hand2",
                            command=self.search_products)
         search_btn.place(x=290, y=45, width=100, height=25)
         
@@ -468,19 +468,19 @@ class BillingClass:
         # Print button
         print_btn = Button(btn_frame, text="Print",
                          font=("goudy old style", 15, "bold"), 
-                         bg="lightgreen", fg="white", cursor="hand2")
+                         bg="lightgreen", fg="black", cursor="hand2")
         print_btn.place(x=0, y=200, width=120, height=50)
         
         # Clear All button
         clear_all_btn = Button(btn_frame, text="Clear All", command=self.clear_all, 
                              font=("goudy old style", 15, "bold"), 
-                             bg="gray", fg="white", cursor="hand2")
+                             bg="gray", fg="black", cursor="hand2")
         clear_all_btn.place(x=120, y=200, width=120, height=50)
         
         # Generate Bill button
-        gen_bill_btn = Button(btn_frame, text="Generate/Save Bill", command=self.generate_bill,
+        gen_bill_btn = Button(btn_frame, text="Generate Bill", command=self.generate_bill,
                             font=("goudy old style", 15, "bold"), 
-                            bg="blue", fg="white", cursor="hand2")
+                            bg="blue", fg="black", cursor="hand2")
         gen_bill_btn.place(x=240, y=200, width=120, height=50)
         
         # Load initial products

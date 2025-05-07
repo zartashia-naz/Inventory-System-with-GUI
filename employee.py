@@ -64,10 +64,10 @@ class Employee:
         search_entry.grid(row=0,column=1)
 
         search_button = Button(search_frame, text='Search', font=('times new roman', 15), command=self.search_employees, width=10, cursor='hand2',
-                               bg="#9370DB",fg='white')
+                               bg="#9370DB",fg='black')
         search_button.grid(row=0, column=2, padx=10)
         show_button = Button(search_frame, text='Show All', font=('times new roman', 15), command=self.show_employees,width=10, cursor='hand2',
-                              bg="#9370DB",fg='white')
+                              bg="#9370DB",fg="black")
         show_button.grid(row=0, column=3)
 
 
@@ -197,17 +197,17 @@ class Employee:
         employee_details_entry=Entry(employee_details_frame, textvariable=self.var_pass,bg="light yellow")
         employee_details_entry.grid(row=4,column=5,padx=10,pady=10)
 
-        add_button=Button(self.root,text="ADD",font=("Times New Roman", 15),command=self.add_employee,bg="purple",activebackground="purple",fg="white",activeforeground="white",cursor = 'hand2',width=10,)
+        add_button=Button(self.root,text="ADD",font=("Times New Roman", 15),command=self.add_employee,bg="purple",activebackground="purple",fg="black",activeforeground="white",cursor = 'hand2',width=10,)
         add_button.place(x=200,y=600)
         
     
-        update_button=Button(self.root,text="UPDATE",font=("Times New Roman", 15),command=self.update_employee,bg="purple",activebackground= "#7B68EE",fg="white",cursor = 'hand2',width=10)
+        update_button=Button(self.root,text="UPDATE",font=("Times New Roman", 15),command=self.update_employee,bg="purple",activebackground= "#7B68EE",fg="black",cursor = 'hand2',width=10)
         update_button.place(x=350,y=600)
 
-        delete_button=Button(self.root,text="DELETE",font=("Times New Roman", 15),command=self.delete_employee,bg="purple",activebackground= "#7B68EE",fg="white",cursor = 'hand2',width=10)
+        delete_button=Button(self.root,text="DELETE",font=("Times New Roman", 15),command=self.delete_employee,bg="purple",activebackground= "#7B68EE",fg="black",cursor = 'hand2',width=10)
         delete_button.place(x=500,y=600)
 
-        clear_button=Button(self.root,text="CLEAR",font=("Times New Roman", 15),command=self.clear_fields,bg="purple",activebackground= "#7B68EE",fg="white",cursor = 'hand2',width=10)
+        clear_button=Button(self.root,text="CLEAR",font=("Times New Roman", 15),command=self.clear_fields,bg="purple",activebackground= "#7B68EE",fg="black",cursor = 'hand2',width=10)
         clear_button.place(x=650,y=600)
         
         # Load employees when window opens
@@ -412,7 +412,7 @@ class Employee:
                 }
             }
             
-            # Try to update with string ID
+            
             result = self.db.employees.update_one({"employee_id": self.selected_emp_id}, update_data)
             
             # If update failed, try with integer ID if it looks like a number

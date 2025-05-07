@@ -5,6 +5,7 @@ from supplier import Supplier
 from category import Category
 from products import Products
 from sales import Sales
+from demand_forecasting import DemandForecasting
 import os
 from login import Login
 from database import MongoDBConnection
@@ -70,6 +71,11 @@ class IMS:
                           font=("Times New Roman", 20, "bold"))
         btn_Sales.pack(side=TOP, fill=X)
         
+
+        btn_Sales = Button(left_menu, text="Demand Forcast",command=self.demand_forcasting, bd=4, padx=5, bg="#009688", cursor="hand2", 
+                          font=("Times New Roman", 20, "bold"))
+        btn_Sales.pack(side=TOP, fill=X)
+
         btn_Exit = Button(left_menu, text="Exit", command=self.root.destroy, bd=4, padx=5, bg="#009688", cursor="hand2", 
                          font=("Times New Roman", 20, "bold"))
         btn_Exit.pack(side=TOP, fill=X)
@@ -256,6 +262,11 @@ class IMS:
         self.sales_obj=Sales(self.sales_window)
         self.sales_window.protocol("WM_DELETE_WINDOW", lambda: self.close_and_refresh(self.sales_window))
     
+    def demand_forcasting(self):
+        self.demandForcast_window=Toplevel(self.root)
+        self.demandForcast_obj=DemandForecasting(self.demandForcast_window)
+        self.demandForcast_window.protocol("WM_DELETE_WINDOW", lambda: self.close_and_refresh(self.demandForcast_window))
+
     def close_and_refresh(self, window):
         """Close window and refresh counts"""
         window.destroy()
