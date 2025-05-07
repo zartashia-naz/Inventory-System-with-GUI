@@ -24,6 +24,7 @@ class BillingClass:
         self.bill_amount = StringVar()
         self.discount = StringVar()
         self.net_pay = StringVar()
+        self.bill_no = ""  # Store current bill number
         
         # Initialize variables
         self.bill_amount.set('0')
@@ -415,73 +416,65 @@ class BillingClass:
         self.bill_area.pack(fill=BOTH, expand=1)
         scrolly.config(command=self.bill_area.yview)
         
-        # Add initial text to bill area
-        self.bill_area.delete(1.0, END)
-        self.bill_area.insert(END, "\t\tXYZ-Inventory\n")
-        self.bill_area.insert(END, "\tPhone No. 975242***** , Lahore-154267\n")
-        self.bill_area.insert(END, "="*50 + "\n")
-        self.bill_area.insert(END, "Customer Name: \n")
-        self.bill_area.insert(END, "Ph no. : \n")
-        self.bill_area.insert(END, "Bill No. \t\t\tDate: \n")
-        self.bill_area.insert(END, "="*50 + "\n")
-        self.bill_area.insert(END, "Product Name\t\tQTY\tPrice\n")
-        self.bill_area.insert(END, "="*50 + "\n")
+        # Add initial text to bill area - show empty bill template
+        self.clear_bill_area()
         
-        # Bill amount
-        bill_amount_frame = Frame(bill_frame, bd=2, relief=RIDGE, bg="#0676ad")
-        bill_amount_frame.place(x=0, y=400, relwidth=1, height=130)
-        
-        self.lbl_bill_amount = Label(bill_amount_frame, text="Bill Amount", 
-                          font=("goudy old style", 15, "bold"), 
-                          bg="#0676ad", fg="white")
-        self.lbl_bill_amount.place(x=2, y=10, width=120, height=40)
-        
-        self.lbl_bill_amount_value = Label(bill_amount_frame, textvariable=self.bill_amount,
-                           font=("goudy old style", 25, "bold"), 
-                           bg="#0676ad", fg="white")
-        self.lbl_bill_amount_value.place(x=2, y=50, width=120, height=60)
-        
-        self.lbl_discount = Label(bill_amount_frame, text="Discount", 
-                    font=("goudy old style", 15, "bold"), 
-                    bg="#0676ad", fg="white")
-        self.lbl_discount.place(x=124, y=10, width=120, height=40)
-        
-        self.lbl_discount_value = Label(bill_amount_frame, textvariable=self.discount,
-                         font=("goudy old style", 25, "bold"), 
-                         bg="#0676ad", fg="white")
-        self.lbl_discount_value.place(x=124, y=50, width=120, height=60)
-        
-        self.lbl_net_pay = Label(bill_amount_frame, text="Net Pay", 
-                   font=("goudy old style", 15, "bold"), 
-                   bg="#0676ad", fg="white")
-        self.lbl_net_pay.place(x=246, y=10, width=110, height=40)
-        
-        self.lbl_net_pay_value = Label(bill_amount_frame, textvariable=self.net_pay,
-                        font=("goudy old style", 25, "bold"), 
-                        bg="#0676ad", fg="white")
-        self.lbl_net_pay_value.place(x=246, y=50, width=110, height=60)
-        
-        # Buttons area
+        # Buttons area - moved up to immediately follow the bill area
         btn_frame = Frame(bill_frame, bd=2, relief=RIDGE, bg="white")
-        btn_frame.place(x=0, y=170, relwidth=1, height=250)
+        btn_frame.place(x=0, y=400, relwidth=1, height=50)
         
         # Print button
         print_btn = Button(btn_frame, text="Print",
                          font=("goudy old style", 15, "bold"), 
-                         bg="lightgreen", fg="black", cursor="hand2")
-        print_btn.place(x=0, y=200, width=120, height=50)
+                         bg="lightgreen", fg="black", cursor="hand2",
+                         command=self.print_bill)
+        print_btn.place(x=0, y=0, width=120, height=50)
         
         # Clear All button
         clear_all_btn = Button(btn_frame, text="Clear All", command=self.clear_all, 
                              font=("goudy old style", 15, "bold"), 
                              bg="gray", fg="black", cursor="hand2")
-        clear_all_btn.place(x=120, y=200, width=120, height=50)
+        clear_all_btn.place(x=120, y=0, width=120, height=50)
         
         # Generate Bill button
         gen_bill_btn = Button(btn_frame, text="Generate Bill", command=self.generate_bill,
                             font=("goudy old style", 15, "bold"), 
                             bg="blue", fg="black", cursor="hand2")
-        gen_bill_btn.place(x=240, y=200, width=120, height=50)
+        gen_bill_btn.place(x=240, y=0, width=120, height=50)
+        
+        # Bill amount - moved down to follow the buttons
+        bill_amount_frame = Frame(bill_frame, bd=2, relief=RIDGE, bg="#0676ad")
+        bill_amount_frame.place(x=0, y=450, relwidth=1, height=100)
+        
+        self.lbl_bill_amount = Label(bill_amount_frame, text="Bill Amount", 
+                          font=("goudy old style", 15, "bold"), 
+                          bg="#0676ad", fg="white")
+        self.lbl_bill_amount.place(x=2, y=10, width=120, height=30)
+        
+        self.lbl_bill_amount_value = Label(bill_amount_frame, textvariable=self.bill_amount,
+                           font=("goudy old style", 25, "bold"), 
+                           bg="#0676ad", fg="white")
+        self.lbl_bill_amount_value.place(x=2, y=40, width=120, height=50)
+        
+        self.lbl_discount = Label(bill_amount_frame, text="Discount", 
+                    font=("goudy old style", 15, "bold"), 
+                    bg="#0676ad", fg="white")
+        self.lbl_discount.place(x=124, y=10, width=120, height=30)
+        
+        self.lbl_discount_value = Label(bill_amount_frame, textvariable=self.discount,
+                         font=("goudy old style", 25, "bold"), 
+                         bg="#0676ad", fg="white")
+        self.lbl_discount_value.place(x=124, y=40, width=120, height=50)
+        
+        self.lbl_net_pay = Label(bill_amount_frame, text="Net Pay", 
+                   font=("goudy old style", 15, "bold"), 
+                   bg="#0676ad", fg="white")
+        self.lbl_net_pay.place(x=246, y=10, width=110, height=30)
+        
+        self.lbl_net_pay_value = Label(bill_amount_frame, textvariable=self.net_pay,
+                        font=("goudy old style", 25, "bold"), 
+                        bg="#0676ad", fg="white")
+        self.lbl_net_pay_value.place(x=246, y=40, width=110, height=50)
         
         # Load initial products
         self.show_all_products()
@@ -677,6 +670,24 @@ class BillingClass:
             
             print(f"Current stock: {available_stock}, In cart: {curr_cart_qty}, Requested: {qty}")
             
+            # Handle case when quantity is 0 - remove item from cart
+            if qty == 0:
+                # Find and remove the item from cart
+                for index, item in enumerate(self.cart_list):
+                    if item.get('name', '') == product_name:
+                        self.cart_list.pop(index)
+                        print(f"Removed {product_name} from cart")
+                        break
+                
+                self.update_cart_display()
+                self.calculate_totals()
+                self.update_stock_label(product_name)
+                self.clear_cart()
+                
+                # After updating cart, refresh product list to show updated quantities
+                self.refresh_product_list()
+                return
+            
             # Calculate if requested quantity is available
             if qty > (available_stock + curr_cart_qty):
                 messagebox.showerror("Error", f"Not enough stock available. Maximum: {available_stock + curr_cart_qty}", parent=self.root)
@@ -776,7 +787,9 @@ class BillingClass:
         self.clear_cart()
         self.bill_amount.set("0")
         self.net_pay.set("0")
-        
+        self.bill_no = ""  # Reset bill number
+        self.clear_bill_area()  # Reset bill area
+
     def calculate_totals(self):
         """Calculate bill amount, discount and net pay"""
         try:
@@ -924,104 +937,72 @@ class BillingClass:
             if not messagebox.askyesno("Confirm", "Generate bill and update stock?", parent=self.root):
                 return
             
-            # 1. Update product quantities in database
+            # Generate a simple bill number - just use current timestamp
+            self.bill_no = str(int(time.time()) % 10000)  # Last 4 digits of current timestamp
+            
+            # Process each item in cart - update quantities
             for item in self.cart_list:
                 product_name = item.get('name', '')
                 qty_sold = item.get('qty', 0)
                 
+                # Skip invalid items
                 if not product_name or not qty_sold:
                     continue
-                    
-                # Debug info before update
-                print(f"Processing sale of {qty_sold} units of {product_name}")
                 
-                # Query to find product by name
-                query = {"name": product_name}
-                
-                # Find the product
-                product = self.db.products.find_one(query)
-                if product:
-                    # Debug: Show what we found in DB
-                    print(f"Found product in DB: {product_name}, current qty: {product.get('quantity', 0)}")
-                    
-                    try:
-                        # Convert to integers for calculation
-                        current_qty = int(product.get('quantity', 0))
-                        qty_sold = int(qty_sold)
-                        
+                # Find and update product in database
+                try:
+                    product = self.db.products.find_one({"name": product_name})
+                    if product:
                         # Calculate new quantity
-                        new_qty = max(0, current_qty - qty_sold)
+                        current_qty = int(product.get('quantity', 0))
+                        new_qty = max(0, current_qty - int(qty_sold))
                         
-                        print(f"Updating {product_name}: {current_qty} - {qty_sold} = {new_qty}")
-                        
-                        # Update product quantity in database
-                        result = self.db.products.update_one(
-                            query, 
+                        # Update product
+                        self.db.products.update_one(
+                            {"name": product_name},
                             {"$set": {"quantity": new_qty}}
                         )
-                        
-                        # Debug: Verify update was successful
-                        print(f"Update result: matched={result.matched_count}, modified={result.modified_count}")
-                        
-                        # Verify the update took effect
-                        updated_product = self.db.products.find_one(query)
-                        print(f"After update: {product_name} qty is now {updated_product.get('quantity', 0)}")
                         
                         # Update status if needed
                         if new_qty == 0:
                             self.db.products.update_one(
-                                query,
+                                {"name": product_name},
                                 {"$set": {"status": "Inactive"}}
                             )
-                            print(f"Set {product_name} status to Inactive")
-                            
-                    except Exception as e:
-                        print(f"Error updating quantity for {product_name}: {e}")
+                except Exception as e:
+                    print(f"Error updating {product_name}: {e}")
             
-            # 2. Record the sale in sales collection
-            # Generate a unique sale ID
-            timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-            random_suffix = str(int(time.time() * 1000) % 10000)  # Last 4 digits of current timestamp in milliseconds
-            sale_id = f"SALE_{timestamp}_{random_suffix}"
-            bill_no = random_suffix  # Use the random suffix as bill number for simplicity
+            # Display the bill
+            self.display_bill(self.bill_no)
             
-            sale_data = {
-                "sale_id": sale_id,  # Add unique sale ID
-                "bill_no": bill_no,
-                "customer_name": self.cust_name.get(),
-                "customer_contact": self.cust_contact.get(),
-                "items": self.cart_list,
-                "bill_amount": float(self.bill_amount.get()),
-                "discount": float(self.discount.get().replace('%', '')),
-                "net_amount": float(self.net_pay.get()),
-                "date": datetime.datetime.now()
-            }
+            # Save sale to database
+            try:
+                sale_data = {
+                    "bill_no": self.bill_no,
+                    "customer_name": self.cust_name.get(),
+                    "customer_contact": self.cust_contact.get(),
+                    "items": self.cart_list,
+                    "bill_amount": float(self.bill_amount.get()),
+                    "discount": float(self.discount.get().replace('%', '')),
+                    "net_amount": float(self.net_pay.get()),
+                    "date": datetime.datetime.now()
+                }
+                
+                self.db.sales.insert_one(sale_data)
+                print(f"Sale saved with bill number: {self.bill_no}")
+                
+                # Save to file
+                self.save_bill_to_file()
+                
+                # Show success message
+                messagebox.showinfo("Success", "Bill generated successfully!", parent=self.root)
+                
+            except Exception as e:
+                print(f"Error saving sale: {e}")
             
-            # Insert sale record
-            self.db.sales.insert_one(sale_data)
-            print(f"Sale record created in database with ID: {sale_id}")
-            
-            # 3. Show success message
-            messagebox.showinfo("Success", "Bill generated and stock updated successfully!", parent=self.root)
-            
-            # 4. Display the bill in the billing area
-            self.display_bill(bill_no)
-            
-            # 5. Save the bill to a file
-            # self.save_bill_to_file(bill_no)
-            
-            # 6. Clear all data
+            # Clear cart and reload products
             self.clear_all()
-            
-            # 7. Force reload products from database to show updated quantities
-            self.product_stock = {}  # Clear our product stock cache completely
-            
-            # Get fresh data from DB
-            print("Reloading all products after sale...")
             self.show_all_products()
-            
-            # Debug: Verify all products in database
-            self.debug_verify_product()
             
         except Exception as e:
             messagebox.showerror("Error", f"Error generating bill: {e}", parent=self.root)
@@ -1030,51 +1011,109 @@ class BillingClass:
     def display_bill(self, bill_no):
         """Display the bill in the billing area"""
         try:
-            # Clear the bill area
+            # Save the bill number for later use (like printing)
+            self.bill_no = bill_no
+            
+            # Clear the bill area first
             self.bill_area.delete(1.0, END)
             
-            # Add company header
-            self.bill_area.insert(END, "\t\tXYZ-Inventory\n")
-            self.bill_area.insert(END, "\tPhone No. 98725***** , Delhi-125001\n")
-            self.bill_area.insert(END, "="*50 + "\n")
+            # Ensure the text widget is editable
+            self.bill_area.config(state="normal")
             
-            # Add customer details
-            self.bill_area.insert(END, f"Customer Name: {self.cust_name.get()}\n")
-            self.bill_area.insert(END, f"Ph no. :{self.cust_contact.get()}\n")
+            # Get current date and time
+            current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             
-            # Add bill number and date
-            current_date = datetime.datetime.now().strftime("%d/%m/%Y")
-            self.bill_area.insert(END, f"Bill No. {bill_no}\t\tDate: {current_date}\n")
+            # Shop information with proper formatting
+            bill_text = ""
+            bill_text += "\n"
+            bill_text += "\t   INVENTORY MANAGEMENT SYSTEM\n"
+            bill_text += "\t   ----------------------------\n"
+            bill_text += "   Phone: 975242***** | Email: info@inventory.com\n"
+            bill_text += "   Address: 123 Main Street, Lahore-154267\n\n"
             
-            # Add product headers
-            self.bill_area.insert(END, "="*50 + "\n")
-            self.bill_area.insert(END, "Product Name\t\tQTY\tPrice\n")
-            self.bill_area.insert(END, "="*50 + "\n")
+            # Bill information
+            bill_text += "="*50 + "\n"
+            bill_text += f"Bill No: {bill_no}\t\tDate: {current_date}\n"
+            bill_text += f"Customer Name: {self.cust_name.get()}\n"
+            bill_text += f"Contact: {self.cust_contact.get()}\n"
+            bill_text += "="*50 + "\n"
             
-            # Add products
+            # Column headers with proper spacing
+            bill_text += f"{'Item':<25}{'Price':<10}{'Qty':<5}{'Total':<10}\n"
+            bill_text += "-"*50 + "\n"
+            
+            # Add each product with better spacing
             for item in self.cart_list:
-                name = item.get('name', '')[:20]  # Limit name length for formatting
-                qty = item.get('qty', 0)
+                name = item.get('name', '')
+                if len(name) > 24:  # Truncate long names
+                    name = name[:21] + "..."
                 price = float(item.get('price', 0))
-                total = qty * price
-                self.bill_area.insert(END, f"{name}\t\t{qty}\tRs.{price:,.1f}\n")
+                qty = int(item.get('qty', 0))
+                total = price * qty
+                
+                # Format each line with proper spacing
+                bill_text += f"{name:<25}{price:<10.2f}{qty:<5}{total:<10.2f}\n"
             
-            # Add totals
-            self.bill_area.insert(END, "="*50 + "\n")
+            # Separator
+            bill_text += "-"*50 + "\n"
             
+            # Financial information with better alignment
             bill_amt = float(self.bill_amount.get())
             discount_percent = float(self.discount.get().replace('%', ''))
             discount_amount = bill_amt * (discount_percent / 100)
             net_pay = float(self.net_pay.get())
             
-            self.bill_area.insert(END, f"Bill Amount\t\t\tRs.{bill_amt:,.1f}\n")
-            self.bill_area.insert(END, f"Discount\t\t\tRs.{discount_amount:,.1f}\n")
-            self.bill_area.insert(END, f"Net Pay\t\t\tRs.{net_pay:,.1f}\n")
-            self.bill_area.insert(END, "="*50 + "\n")
+            bill_text += f"{'Subtotal:':<25}{bill_amt:>25.2f}\n"
+            bill_text += f"{'Discount (' + str(discount_percent) + '%):':<25}{discount_amount:>25.2f}\n"
+            bill_text += f"{'Net Amount:':<25}{net_pay:>25.2f}\n\n"
+            
+            # Add thank you message
+            bill_text += "-"*50 + "\n"
+            bill_text += f"{'Thank You For Shopping With Us!':<50}\n"
+            bill_text += "-"*50 + "\n"
+            
+            # Add the whole text at once
+            self.bill_area.insert("1.0", bill_text)
+            
+            # Make the text widget read-only to prevent editing
+            self.bill_area.config(state="disabled")
+            
+            # Force update and show the beginning
+            self.bill_area.update()
+            self.bill_area.see("1.0")
+            
+            # For debugging
+            print("Bill content generated:")
+            print(bill_text)
             
         except Exception as e:
             print(f"Error displaying bill: {e}")
-    
+            # Show error in bill area
+            self.bill_area.delete(1.0, END)
+            self.bill_area.insert(END, f"Error generating bill: {e}")
+            import traceback
+            traceback.print_exc()
+
+    def save_bill_to_file(self):
+        """Save the bill content to a text file"""
+        try:
+            # Create bills directory if it doesn't exist
+            if not os.path.exists("bills"):
+                os.makedirs("bills")
+            
+            # Create simple filename
+            bill_file = f"bills/Bill_{self.bill_no}.txt"
+            
+            # Open file and write bill content
+            with open(bill_file, "w") as f:
+                bill_content = self.bill_area.get(1.0, END)
+                f.write(bill_content)
+                
+            print(f"Bill saved to {bill_file}")
+            return True
+        except Exception as e:
+            print(f"Error saving bill to file: {e}")
+            return False
 
     def debug_verify_product(self, product_name=None):
         """Debug function to verify database contents directly"""
@@ -1095,6 +1134,57 @@ class BillingClass:
                 print(f"DB Entry - Name: {product.get('name')}, Qty: {product.get('quantity')}, Status: {product.get('status')}")
         
         print("===========================\n")
+
+    def clear_bill_area(self):
+        """Clear the bill area and add an empty bill template"""
+        self.bill_area.delete(1.0, END)
+        self.bill_area.insert(END, "\n")
+        self.bill_area.insert(END, "\t   INVENTORY MANAGEMENT SYSTEM\n")
+        self.bill_area.insert(END, "\t   ----------------------------\n")
+        self.bill_area.insert(END, "   Phone: 975242***** | Email: info@inventory.com\n")
+        self.bill_area.insert(END, "   Address: 123 Main Street, Lahore-154267\n\n")
+        self.bill_area.insert(END, "="*50 + "\n")
+        self.bill_area.insert(END, "Bill No: \t\t\tDate: \n")
+        self.bill_area.insert(END, "Customer Name: \n")
+        self.bill_area.insert(END, "Contact: \n")
+        self.bill_area.insert(END, "="*50 + "\n")
+        self.bill_area.insert(END, f"{'Item':<25}{'Price':<10}{'Qty':<5}{'Total':<10}\n")
+        self.bill_area.insert(END, "-"*50 + "\n")
+        self.bill_area.insert(END, "\n\n" + "-"*50 + "\n")
+        self.bill_area.insert(END, f"{'Thank You For Shopping With Us!':<50}\n")
+        self.bill_area.insert(END, "-"*50 + "\n")
+
+    def print_bill(self):
+        """Print the bill"""
+        if not self.bill_no:
+            messagebox.showerror("Error", "No bill to print! Please generate a bill first.", parent=self.root)
+            return
+            
+        # Get the bill content
+        bill_content = self.bill_area.get(1.0, END)
+        if not bill_content.strip():
+            messagebox.showerror("Error", "Bill is empty!", parent=self.root)
+            return
+            
+        # Create bills directory if it doesn't exist
+        if not os.path.exists("bills"):
+            os.makedirs("bills")
+            
+        # Save to file for printing
+        bill_file = f"bills/Bill_{self.bill_no}.txt"
+        try:
+            with open(bill_file, "w") as f:
+                f.write(bill_content)
+                
+            # Confirm and open file
+            if messagebox.askyesno("Print", "Bill saved. Do you want to open it?", parent=self.root):
+                # Open with default application
+                import webbrowser
+                webbrowser.open(bill_file)
+                
+        except Exception as e:
+            messagebox.showerror("Error", f"Error printing bill: {e}", parent=self.root)
+            print(f"Error printing bill: {e}")
 
 
 if __name__=="__main__":
